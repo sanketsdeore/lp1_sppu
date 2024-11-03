@@ -1,0 +1,51 @@
+#include <jni.h>
+#include "ArithmeticOperations.h"
+
+JNIEXPORT jint JNICALL Java_ArithmeticOperations_add(JNIEnv *env, jobject obj, jint a, jint b) {
+    return a + b;
+}
+
+JNIEXPORT jint JNICALL Java_ArithmeticOperations_subtract(JNIEnv *env, jobject obj, jint a, jint b) {
+    return a - b;
+}
+
+JNIEXPORT jint JNICALL Java_ArithmeticOperations_multiply(JNIEnv *env, jobject obj, jint a, jint b) {
+    return a * b;
+}
+
+JNIEXPORT jint JNICALL Java_ArithmeticOperations_divide(JNIEnv *env, jobject obj, jint a, jint b) {
+    return a / b;
+}
+
+
+public class ArithmeticOperations {
+    public native int add(int a, int b);
+    public native int subtract(int a, int b);
+    public native int multiply(int a, int b);
+    public native int divide(int a, int b);
+
+    static {
+        System.loadLibrary("ArithmeticOperations");
+    }
+
+    public static void main(String[] args) {
+        ArithmeticOperations ops = new ArithmeticOperations();
+
+        int a = 10, b = 5;
+
+        System.out.println("Addition: " + ops.add(a, b));
+        System.out.println("Subtract: " + ops.subtract(a, b));
+        System.out.println("Multiply: " + ops.multiply(a, b));
+        System.out.println("Divide: " + ops.divide(a, b));
+    }
+}
+
+javac ArithmeticOperations.java
+javac -h . ArithmeticOperations.java
+echo $JAVA_HOME
+export JAVA_HOME=/path/to/your/jdk
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+source ~/.bashrc
+ls $JAVA_HOME/include/jni.h
+ls $JAVA_HOME/include/linux/jni_md.h
+gcc -I "$JAVA_HOME/include" -I "$JAVA_HOME/include/linux" -shared -o libArithmeticOperations.so ArithmeticOperations.c java -Djava.library.path=. ArithmeticOperations
